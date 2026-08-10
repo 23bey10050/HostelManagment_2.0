@@ -26,7 +26,7 @@ function CTSLogin() {
         email: credentials.email,
         role: 'cts',
         ...userData
-      });
+      }, response.data.token);
 
       navigate('/dashboard');
     } catch (error) {

@@ -1,4 +1,4 @@
-import firebaseAdmin from '../config/firebase.js';
+import jwt from 'jsonwebtoken';
 
 export const verifyToken = async (req, res, next) => {
   try {
@@ -8,25 +8,16 @@ export const verifyToken = async (req, res, next) => {
     }
 
     try {
-      const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
-      // Enhanced debugging info
-      console.log('Token verified for user:', decodedToken.email || decodedToken.uid);
-      console.log('Claims in token:', {
-        role: decodedToken.role,
-        workerCategory: decodedToken.workerCategory,
-        upiId: decodedToken.upiId,
-        timestamp: new Date().toISOString()
-      });
+      const secret = process.env.JWT_SECRET || 'fallback_demo_secret_key_123';
+      const decodedToken = jwt.verify(token, secret);
       
-      // Check if token has role claim
+      console.log('Token verified for user:', decodedToken.email || decodedToken.uid);
+      
       if (!decodedToken.role) {
         return res.status(403).json({ message: 'No role specified in token' });
       }
       
-      req.user = {
-        ...decodedToken,
-        role: decodedToken.role
-      };
+      req.user = decodedToken;
       
       next();
     } catch (error) {

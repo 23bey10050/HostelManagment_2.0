@@ -39,7 +39,7 @@ function LoginPage() {
         name: userData.name,
         workerCategory: userData.workerCategory,
         upiId: userData.upiId
-      });
+      }, response.data.token);
 
       // Navigate based on role
       let dashboardPath = '/dashboard';
