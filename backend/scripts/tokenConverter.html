@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Token Converter</title>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getAuth, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWD4QhF7sk9-DRVNrf5ApRy0aet_Z30SI",
+            authDomain: "hostelmanagement-d912d.firebaseapp.com",
+            projectId: "hostelmanagement-d912d",
+            storageBucket: "hostelmanagement-d912d.appspot.com",
+            messagingSenderId: "224663957279",
+            appId: "1:224663957279:web:236fdf0891b523932eca2a"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.convertToken = async function() {
+            const customToken = document.getElementById('customToken').value;
+            try {
+                const userCredential = await signInWithCustomToken(auth, customToken);
+                const idToken = await userCredential.user.getIdToken();
+                document.getElementById('idToken').value = idToken;
+                console.log("ID Token:", idToken);
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('idToken').value = "Error: " + error.message;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Firebase Token Converter</h2>
+    <div>
+        <p>Custom Token:</p>
+        <textarea id="customToken" rows="5" cols="50"></textarea>
+    </div>
+    <button onclick="convertToken()">Convert to ID Token</button>
+    <div>
+        <p>ID Token:</p>
+        <textarea id="idToken" rows="5" cols="50"></textarea>
+    </div>
+</body>
+</html>
