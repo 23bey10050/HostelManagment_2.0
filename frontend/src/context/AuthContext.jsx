@@ -1,60 +1,46 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { auth } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import axios from 'axios';
 
 const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUserState] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          // Always force a token refresh when auth state changes
-          await firebaseUser.getIdToken(true);
-          const idTokenResult = await firebaseUser.getIdTokenResult(true);
-          
-          // Add debugging
-          console.log('Auth state changed:', {
-            uid: firebaseUser.uid,
-            role: idTokenResult.claims.role
-          });
-          
-          // If no role claim, sign out and force re-login
-          if (!idTokenResult.claims.role) {
-            console.warn('No role claim found, signing out...');
-            await auth.signOut();
-            setUser(null);
-          } else {
-            setUser({
-              uid: firebaseUser.uid,
-              email: firebaseUser.email,
-              role: idTokenResult.claims.role,
-              name: firebaseUser.displayName || '',
-              workerCategory: idTokenResult.claims.workerCategory || null
-            });
-          }
-        } catch (error) {
-          console.error('Auth state change error:', error);
-          await auth.signOut();
-          setUser(null);
+    // Demo Mode: Check local storage for an active session
+    const checkSession = () => {
+      try {
+        const session = localStorage.getItem('demo_session');
+        if (session) {
+          const userData = JSON.parse(session);
+          setUserState(userData);
+        } else {
+          setUserState(null);
         }
-      } else {
-        setUser(null);
+      } catch (error) {
+        console.error('Session read error:', error);
+        setUserState(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    checkSession();
   }, []);
+
+  const setUser = (userData) => {
+    if (userData) {
+      localStorage.setItem('demo_session', JSON.stringify(userData));
+    } else {
+      localStorage.removeItem('demo_session');
+    }
+    setUserState(userData);
+  };
 
   const value = {
     user,
     loading,
-    setUser // Export setUser to allow direct updates
+    setUser
   };
 
   return (

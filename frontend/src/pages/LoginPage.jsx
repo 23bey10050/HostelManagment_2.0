@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
-import { useAuth } from '../context/AuthContext';  // Add this import
-import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signInWithCustomToken } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 function LoginPage() {
   const { role } = useParams();
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // Add this line to get setUser
+  const { setUser } = useAuth();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Auto-fill demo credentials based on role
+  useEffect(() => {
+    if (role === 'student') setCredentials({ email: 'student@demo.com', password: 'password123' });
+    if (role === 'warden') setCredentials({ email: 'warden@demo.com', password: 'password123' });
+    if (role === 'worker') setCredentials({ email: 'worker@demo.com', password: 'password123' });
+    if (role === 'canteen') setCredentials({ email: 'canteen@demo.com', password: 'password123' });
+  }, [role]);
 
   const handleStaffLogin = async (e) => {
     e.preventDefault();
@@ -21,24 +27,18 @@ function LoginPage() {
     try {
       console.log('Logging in with credentials:', { email: credentials.email, role });
       const response = await axios.post('http://localhost:8000/api/auth/staff/login', credentials);
-      const { customToken, user: userData } = response.data;
+      const { user: userData } = response.data;
       
       console.log('Login successful:', userData);
       
-      // Sign in with custom token
-      const userCredential = await signInWithCustomToken(auth, customToken);
-      
-      // Force token refresh
-      await userCredential.user.getIdToken(true);
-      
       // Update user context immediately
       setUser({
-        uid: userCredential.user.uid,
+        uid: userData.uid || 'demo-user',
         email: credentials.email,
         role: userData.role,
         name: userData.name,
         workerCategory: userData.workerCategory,
-        upiId: userData.upiId // Add UPI ID for canteen staff
+        upiId: userData.upiId
       });
 
       // Navigate based on role
@@ -55,7 +55,6 @@ function LoginPage() {
       navigate(dashboardPath);
     } catch (error) {
       console.error('Login error:', error);
-      await auth.signOut();
       setError(error.response?.data?.message || error.message || 'Login failed');
     } finally {
       setLoading(false);
@@ -96,25 +95,17 @@ function LoginPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Student Login</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Student Demo Login</h2>
           
           <button
-            onClick={handleGoogleLogin}
+            onClick={handleStaffLogin}
             disabled={loading}
             className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
               <span>Processing...</span>
             ) : (
-              <>
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                <span>Sign in with Google</span>
-              </>
+              <span>Quick Login as Student</span>
             )}
           </button>
 
@@ -122,9 +113,6 @@ function LoginPage() {
             <div className="mt-4 p-3 bg-red-100 text-red-700 rounded border border-red-300">
               <p className="font-medium">Access Denied</p>
               <p className="text-sm mt-1">{error}</p>
-              <p className="text-sm mt-2">
-                If you are a student and cannot access the system, please contact your hostel administrator.
-              </p>
             </div>
           )}
         </div>

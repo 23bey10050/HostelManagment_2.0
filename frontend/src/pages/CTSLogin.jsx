@@ -19,14 +19,10 @@ function CTSLogin() {
 
     try {
       const response = await axios.post('http://localhost:8000/api/auth/cts/login', credentials);
-      const { customToken, user: userData } = response.data;
+      const { user: userData } = response.data;
       
-      // Sign in with Firebase
-      const userCredential = await signInWithCustomToken(auth, customToken);
-      
-      // Set user data immediately without waiting for onAuthStateChanged
       setUser({
-        uid: userCredential.user.uid,
+        uid: userData.uid || 'demo-cts',
         email: credentials.email,
         role: 'cts',
         ...userData
