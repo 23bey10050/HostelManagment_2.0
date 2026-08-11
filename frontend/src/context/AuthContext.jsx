@@ -34,16 +34,29 @@ export function AuthProvider({ children }) {
   }, []);
 
   const setUser = (userData, token) => {
-    if (userData && token) {
-      localStorage.setItem('demo_session', JSON.stringify(userData));
-      localStorage.setItem('demo_token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
+    if (userData === null) {
       localStorage.removeItem('demo_session');
       localStorage.removeItem('demo_token');
       delete axios.defaults.headers.common['Authorization'];
+      setUserState(null);
+      return;
     }
-    setUserState(userData);
+
+    if (token) {
+      localStorage.setItem('demo_token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+    
+    if (typeof userData === 'function') {
+      setUserState(prev => {
+        const nextState = userData(prev);
+        localStorage.setItem('demo_session', JSON.stringify(nextState));
+        return nextState;
+      });
+    } else {
+      localStorage.setItem('demo_session', JSON.stringify(userData));
+      setUserState(userData);
+    }
   };
 
   const value = {

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { auth } from '../../../firebase';
 import axios from 'axios';
 
 function EditItemModal({ isOpen, onClose, onEdit, item }) {
@@ -34,7 +33,7 @@ function EditItemModal({ isOpen, onClose, onEdit, item }) {
     setError('');
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.put(`http://localhost:8000/api/canteen/items/${item._id}`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });

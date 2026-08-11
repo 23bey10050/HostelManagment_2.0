@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import ComplaintTable from '../../components/dashboard/ComplaintTable';
 import ComplaintFilters from '../../components/dashboard/ComplaintFilters';
@@ -18,7 +17,7 @@ function ComplaintsPage() {
 
   const fetchComplaints = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const params = new URLSearchParams();
       
       if (filters.status) params.append('status', filters.status);
@@ -48,7 +47,7 @@ function ComplaintsPage() {
 
   const handleStatusChange = async (complaintId, newStatus) => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.patch(
         `http://localhost:8000/api/complaints/${complaintId}/status`,
         { status: newStatus },

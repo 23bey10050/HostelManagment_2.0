@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AnnouncementProvider } from './context/AnnouncementContext';
+import { ThemeProvider } from './context/ThemeContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
-import CTSLogin from './pages/CTSLogin';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 import CTSDashboard from './pages/dashboard/CTSDashboard';
@@ -26,12 +26,13 @@ function App() {
   return (
     <AuthProvider>
       <AnnouncementProvider>
-        <Router>
-          <Routes>
+        <ThemeProvider>
+          <Router>
+            <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Navigate to="/" />} />
             <Route path="/login/:role" element={<LoginPage />} />
-            <Route path="/admin" element={<CTSLogin />} />
+            <Route path="/admin" element={<Navigate to="/login/cts" />} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route index element={<CTSDashboard />} />
               <Route path="students" element={<StudentsPage />} />
@@ -51,8 +52,9 @@ function App() {
               <Route path="canteen-orders" element={<CanteenOrders />} />
               <Route path="student-canteen" element={<StudentCanteen />} />
             </Route>
-          </Routes>
-        </Router>
+            </Routes>
+          </Router>
+        </ThemeProvider>
       </AnnouncementProvider>
     </AuthProvider>
   );

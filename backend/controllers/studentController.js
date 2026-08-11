@@ -143,15 +143,8 @@ export const toggleStudentAccess = async (req, res) => {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // If disabling access, revoke Firebase tokens
-    if (isDisabled) {
-      try {
-        const firebaseUser = await firebaseAdmin.auth().getUserByEmail(student.email);
-        await firebaseAdmin.auth().revokeRefreshTokens(firebaseUser.uid);
-      } catch (error) {
-        console.error('Firebase token revocation error:', error);
-      }
-    }
+    // Note: JWT tokens will naturally expire after 30 days.
+    // If disabling access, the user simply won't be able to login again.
 
     res.json(student);
   } catch (error) {

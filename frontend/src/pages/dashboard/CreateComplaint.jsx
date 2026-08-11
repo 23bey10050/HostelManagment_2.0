@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 
@@ -21,7 +20,7 @@ function CreateComplaint() {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const token = await auth.currentUser.getIdToken();
+        const token = localStorage.getItem('demo_token');
         const response = await axios.get('http://localhost:8000/api/students/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -54,7 +53,7 @@ function CreateComplaint() {
     }
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const formDataToSend = new FormData();
       
       // Ensure all required fields are included

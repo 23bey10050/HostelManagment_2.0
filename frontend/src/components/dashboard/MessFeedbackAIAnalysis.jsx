@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 
 function MessFeedbackAIAnalysis() {
   const [analysis, setAnalysis] = useState(null);
@@ -13,7 +12,7 @@ function MessFeedbackAIAnalysis() {
     setError('');
     
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(
         'http://localhost:8000/api/mess-feedback/ai-analysis',
         {

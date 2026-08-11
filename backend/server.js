@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import seedDemo from './scripts/seedDemo.js';
 import { errorLogger, errorHandler } from './middleware/errorMiddleware.js';
 
 // Routes imports will go here
@@ -34,8 +35,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB and seed demo data
+connectDB().then(() => seedDemo());
 
 // Routes
 app.use('/api/auth', authRoutes);

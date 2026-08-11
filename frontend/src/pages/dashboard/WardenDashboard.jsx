@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { auth } from '../../firebase';
 import axios from 'axios';
 import RecentAnnouncements from '../../components/dashboard/RecentAnnouncements';
 import AnnouncementModal from '../../components/dashboard/AnnouncementModal';
@@ -26,7 +25,7 @@ function WardenDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const [statsRes, announcementsRes] = await Promise.all([
         axios.get('http://localhost:8000/api/stats/dashboard', {
           headers: { Authorization: `Bearer ${token}` }

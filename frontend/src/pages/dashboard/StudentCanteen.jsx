@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 
 function StudentCanteen() {
@@ -28,7 +27,7 @@ function StudentCanteen() {
   const fetchMenuItems = async () => {
     try {
       setLoading(true);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(
         'http://localhost:8000/api/canteen/items',
         {
@@ -46,7 +45,7 @@ function StudentCanteen() {
 
   const fetchCanteenStatus = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/canteen/status', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -59,7 +58,7 @@ function StudentCanteen() {
   const fetchMyOrders = async () => {
     try {
       setLoading(true);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(
         'http://localhost:8000/api/canteen/my-orders',
         {
@@ -105,7 +104,7 @@ function StudentCanteen() {
   const handlePlaceOrder = async () => {
     try {
       setLoading(true);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       // Format items for the API
       const items = cart.map(item => ({
@@ -178,7 +177,7 @@ function StudentCanteen() {
 
   const handlePaymentSuccess = async (paymentId, razorpayOrderId, signature, orderData) => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       console.log('Payment success data:', {
         paymentId,

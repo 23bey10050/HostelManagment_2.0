@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useAnnouncements } from '../../context/AnnouncementContext';
-import { auth } from '../../firebase';
 import axios from 'axios';
 import MessMenu from '../../components/dashboard/MessMenu';
 import MessFeedbackForm from '../../components/dashboard/MessFeedbackForm';
@@ -25,7 +24,7 @@ function StudentDashboard() {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const token = await auth.currentUser.getIdToken();
+        const token = localStorage.getItem('demo_token');
         const [studentRes, complaintsRes] = await Promise.all([
           axios.get('http://localhost:8000/api/students/me', {
             headers: { Authorization: `Bearer ${token}` }
@@ -56,7 +55,7 @@ function StudentDashboard() {
   useEffect(() => {
     const getFeedbackStatus = async () => {
       try {
-        const token = await auth.currentUser.getIdToken();
+        const token = localStorage.getItem('demo_token');
         const response = await axios.get(
           'http://localhost:8000/api/mess-feedback/status',
           {
@@ -92,35 +91,6 @@ function StudentDashboard() {
         <FeedbackNotification />
       )}
 
-      {/* Recent Announcements Banner - Only shown if there are unread announcements */}
-      {recentAnnouncements.length > 0 && (
-        <div className="mb-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg shadow-sm">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-semibold text-blue-800">Recent Announcements</h3>
-            <Link to="/dashboard/student-announcements" className="text-blue-600 text-sm hover:underline">
-              View All
-            </Link>
-          </div>
-          
-          <div className="space-y-3">
-            {recentAnnouncements.map(announcement => (
-              <div 
-                key={announcement._id} 
-                className="bg-white p-3 rounded border border-blue-100 shadow-sm"
-                onClick={() => markAsRead(announcement._id)}
-              >
-                <div className="flex justify-between">
-                  <h4 className="font-medium">{announcement.title}</h4>
-                  <span className="text-xs text-gray-500">
-                    {new Date(announcement.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 mt-1">{announcement.content.substring(0, 100)}...</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Welcome Section */}
       <div className="mb-8">

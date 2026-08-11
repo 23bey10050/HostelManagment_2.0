@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { auth } from '../../../firebase';
 import axios from 'axios';
 
 function AddItemModal({ isOpen, onClose, onAdd }) {
@@ -43,7 +42,7 @@ function AddItemModal({ isOpen, onClose, onAdd }) {
     setError('');
     
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);

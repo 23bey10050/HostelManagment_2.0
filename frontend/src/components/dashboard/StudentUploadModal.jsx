@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import ExcelTemplateGenerator from './ExcelTemplateGenerator';
 
 function StudentUploadModal({ isOpen, onClose, onUploadSuccess }) {
@@ -30,7 +29,7 @@ function StudentUploadModal({ isOpen, onClose, onUploadSuccess }) {
     formData.append('file', file);
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.post('http://localhost:8000/api/students/bulk', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

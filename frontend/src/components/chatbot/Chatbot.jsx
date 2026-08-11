@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import { FaRobot, FaTimes, FaChevronDown, FaChevronUp, FaPaperPlane } from 'react-icons/fa';
 
 function Chatbot() {
@@ -31,7 +30,7 @@ function Chatbot() {
     setIsLoading(true);
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.post(
         'http://localhost:8000/api/chatbot/query',
         { query: input },

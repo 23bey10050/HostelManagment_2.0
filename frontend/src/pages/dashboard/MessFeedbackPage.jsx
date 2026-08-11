@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import MessFeedbackAnalytics from '../../components/dashboard/MessFeedbackAnalytics';
 import MessFeedbackResponses from '../../components/dashboard/MessFeedbackResponses';
 import MessFeedbackAIAnalysis from '../../components/dashboard/MessFeedbackAIAnalysis';
@@ -17,7 +16,7 @@ function MessFeedbackPage() {
 
   const fetchFeedbackStatus = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(
         'http://localhost:8000/api/mess-feedback/status',
         {
@@ -33,7 +32,7 @@ function MessFeedbackPage() {
 
   const fetchAnalytics = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(
         'http://localhost:8000/api/mess-feedback/analytics',
         {
@@ -49,7 +48,7 @@ function MessFeedbackPage() {
 
   const fetchResponses = async (page = 1, filters = {}) => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const params = new URLSearchParams({ page, ...filters });
       
       const response = await axios.get(
@@ -70,7 +69,7 @@ function MessFeedbackPage() {
 
   const toggleFeedbackSystem = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.put(
         'http://localhost:8000/api/mess-feedback/toggle',
         { enabled: !feedbackEnabled },

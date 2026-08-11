@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 
 function AddStaffModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -32,7 +31,7 @@ function AddStaffModal({ isOpen, onClose, onSuccess }) {
 
     setLoading(true);
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       // Only include relevant fields based on role
       const submitData = {

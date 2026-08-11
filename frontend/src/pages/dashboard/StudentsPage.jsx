@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import StudentTable from '../../components/dashboard/StudentTable';
 import StudentAddModal from '../../components/dashboard/StudentAddModal';
 import StudentUploadModal from '../../components/dashboard/StudentUploadModal';
@@ -26,7 +25,7 @@ function StudentsPage() {
 
   const fetchStudents = async (page = 1, search = '') => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       // Fetch paginated students for table view
       const response = await axios.get(
@@ -70,7 +69,7 @@ function StudentsPage() {
     if (viewMode === 'allocation' && !allStudents.length) {
       const fetchAllStudents = async () => {
         try {
-          const token = await auth.currentUser.getIdToken();
+          const token = localStorage.getItem('demo_token');
           const response = await axios.get(
             `http://localhost:8000/api/students/all`,
             {
@@ -103,7 +102,7 @@ function StudentsPage() {
     if (!window.confirm('Are you sure you want to delete this student?')) return;
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.delete(`http://localhost:8000/api/students/${studentId}`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -117,7 +116,7 @@ function StudentsPage() {
 
   const handleToggleAccess = async (studentId, disable) => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.patch(
         `http://localhost:8000/api/students/${studentId}/access`,
         { isDisabled: disable },
@@ -229,7 +228,7 @@ function StudentsPage() {
             // Refresh all students data when adding from room view
             const fetchAllStudents = async () => {
               try {
-                const token = await auth.currentUser.getIdToken();
+                const token = localStorage.getItem('demo_token');
                 const response = await axios.get(
                   `http://localhost:8000/api/students/all`,
                   {

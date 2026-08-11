@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import StaffTable from '../../components/dashboard/StaffTable';
 import AddStaffModal from '../../components/dashboard/AddStaffModal';
 
@@ -14,7 +13,7 @@ function StaffManagementPage() {
 
   const fetchStaff = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(
         `http://localhost:8000/api/staff?search=${searchTerm}`,
         {
@@ -44,7 +43,7 @@ function StaffManagementPage() {
     if (!window.confirm('Are you sure you want to delete this staff member?')) return;
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.delete(`http://localhost:8000/api/staff/${staffId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });

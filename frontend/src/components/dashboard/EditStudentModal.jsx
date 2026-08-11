@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 
 function EditStudentModal({ isOpen, onClose, student, onEditSuccess }) {
   const [formData, setFormData] = useState(student || {});
@@ -22,7 +21,7 @@ function EditStudentModal({ isOpen, onClose, student, onEditSuccess }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.put(`http://localhost:8000/api/students/${student._id}`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });

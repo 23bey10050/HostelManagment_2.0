@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
 import { signInWithCustomToken } from 'firebase/auth';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 function CTSLogin() {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [credentials, setCredentials] = useState({ email: 'admin@demo.com', password: 'demo123' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

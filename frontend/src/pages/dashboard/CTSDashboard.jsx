@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
-import { auth } from '../../firebase';  // Add this import
+  // Add this import
 
 function CTSDashboard() {
   const [stats, setStats] = useState({
@@ -25,7 +25,7 @@ function CTSDashboard() {
 
   const fetchDashboardStats = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/stats/dashboard', {
         headers: {
           Authorization: `Bearer ${token}`

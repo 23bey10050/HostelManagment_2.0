@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
+import { motion } from 'framer-motion';
 
 function DashboardLayout() {
   const { user } = useAuth();
@@ -22,23 +23,31 @@ function DashboardLayout() {
         case 'student':
           navigate('/dashboard/student');
           break;
+        case 'canteen':
+          navigate('/dashboard/canteen');
+          break;
         case 'cts':
-          // Changed from '/dashboard/students' to '/' to show CTS dashboard
+          // Show CTS dashboard at root
           break;
       }
     }
   }, [user?.role, navigate, location.pathname]);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg)' }}>
       <Sidebar />
-      <div className="flex-1 ml-64">
+      <div style={{ flex: 1, marginLeft: 'var(--sidebar-w)', display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <main className="p-6">
-          <div className="container mx-auto">
-            <Outlet />
-          </div>
-        </main>
+
+        <motion.main
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          style={{ flex: 1, padding: '28px 32px', paddingTop: 'calc(var(--header-h) + 28px)' }}
+        >
+          <Outlet />
+        </motion.main>
       </div>
     </div>
   );

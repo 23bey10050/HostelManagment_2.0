@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 
 function AnnouncementModal({ isOpen, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -17,7 +16,7 @@ function AnnouncementModal({ isOpen, onClose, onSuccess }) {
     setError('');
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.post(
         'http://localhost:8000/api/announcements',
         formData,

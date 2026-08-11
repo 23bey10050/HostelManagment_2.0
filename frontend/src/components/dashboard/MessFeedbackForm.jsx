@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 
 function MessFeedbackForm() {
@@ -28,7 +27,7 @@ function MessFeedbackForm() {
   useEffect(() => {
     const checkCompletedMealTypes = async () => {
       try {
-        const token = await auth.currentUser.getIdToken();
+        const token = localStorage.getItem('demo_token');
         const response = await axios.get(
           'http://localhost:8000/api/mess-feedback/my-submissions',
           {
@@ -60,7 +59,7 @@ function MessFeedbackForm() {
     const fetchData = async () => {
       try {
         setStatusLoading(true);
-        const token = await auth.currentUser.getIdToken();
+        const token = localStorage.getItem('demo_token');
         
         // Fetch feedback status
         const statusResponse = await axios.get(
@@ -128,7 +127,7 @@ function MessFeedbackForm() {
     setSuccess('');
     
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.post(
         'http://localhost:8000/api/mess-feedback/submit',
         formData,

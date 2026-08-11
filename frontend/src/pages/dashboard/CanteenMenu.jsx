@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { auth } from '../../firebase';
 import axios from 'axios';
 import AddItemModal from '../../components/dashboard/canteen/AddItemModal';
 import EditItemModal from '../../components/dashboard/canteen/EditItemModal';
@@ -20,7 +19,7 @@ function CanteenMenu() {
   const fetchMenuItems = async () => {
     try {
       setLoading(true);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       let url = 'http://localhost:8000/api/canteen/items';
       const params = new URLSearchParams();
@@ -62,7 +61,7 @@ function CanteenMenu() {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.delete(`http://localhost:8000/api/canteen/items/${itemId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -76,7 +75,7 @@ function CanteenMenu() {
 
   const toggleItemAvailability = async (itemId) => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.patch(
         `http://localhost:8000/api/canteen/items/${itemId}/toggle`,
         {},

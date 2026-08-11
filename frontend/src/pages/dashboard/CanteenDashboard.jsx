@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 
 function CanteenDashboard() {
@@ -37,7 +36,7 @@ function CanteenDashboard() {
 
   const fetchCanteenData = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/canteen/stats', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -52,7 +51,7 @@ function CanteenDashboard() {
 
   const fetchCanteenStatus = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/canteen/status', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -67,7 +66,7 @@ function CanteenDashboard() {
   const toggleCanteenStatus = async () => {
     try {
       setUpdatingStatus(true);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const newStatus = !canteenStatus.isOpen;
       
       const response = await axios.put(

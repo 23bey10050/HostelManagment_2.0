@@ -1,4 +1,3 @@
-import { auth } from '../../firebase';
 import axios from 'axios';
 
 function RecentAnnouncements({ announcements, onDelete }) {
@@ -6,7 +5,7 @@ function RecentAnnouncements({ announcements, onDelete }) {
     if (!window.confirm('Are you sure you want to delete this announcement?')) return;
 
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.delete(`http://localhost:8000/api/announcements/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });

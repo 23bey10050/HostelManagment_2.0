@@ -1,120 +1,237 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAnnouncements } from '../context/AnnouncementContext';
+import { useTheme } from '../context/ThemeContext';
+import {
+  HomeIcon,
+  UsersIcon,
+  WrenchScrewdriverIcon,
+  MegaphoneIcon,
+  ChatBubbleLeftEllipsisIcon,
+  PlusCircleIcon,
+  BuildingStorefrontIcon,
+  ClipboardDocumentListIcon,
+  ShoppingCartIcon,
+  Cog8ToothIcon,
+  SunIcon,
+  MoonIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronRightIcon,
+  AcademicCapIcon,
+  ShieldCheckIcon,
+} from '@heroicons/react/24/solid';
+
+const ROLE_LABELS = {
+  student: 'Student',
+  warden:  'Warden',
+  worker:  'Worker',
+  canteen: 'Canteen',
+  cts:     'CTS Admin',
+};
+
+const NAV_BY_ROLE = {
+  student: [
+    { label: 'Dashboard',        href: '/dashboard/student',               icon: HomeIcon },
+    { label: 'Announcements',    href: '/dashboard/student-announcements', icon: MegaphoneIcon,              badge: true },
+    { label: 'My Complaints',    href: '/dashboard/complaints',            icon: ChatBubbleLeftEllipsisIcon },
+    { label: 'Submit Complaint', href: '/dashboard/submit-complaint',      icon: PlusCircleIcon },
+    { label: 'Night Canteen',    href: '/dashboard/student-canteen',       icon: BuildingStorefrontIcon },
+  ],
+  warden: [
+    { label: 'Dashboard',     href: '/dashboard/warden',        icon: HomeIcon },
+    { label: 'Students',      href: '/dashboard/students',      icon: UsersIcon },
+    { label: 'Complaints',    href: '/dashboard/complaints',    icon: ChatBubbleLeftEllipsisIcon },
+    { label: 'Announcements', href: '/dashboard/announcements', icon: MegaphoneIcon },
+    { label: 'Mess Feedback', href: '/dashboard/mess-feedback', icon: ClipboardDocumentListIcon },
+  ],
+  worker: [
+    { label: 'My Tasks', href: '/dashboard/worker', icon: WrenchScrewdriverIcon },
+  ],
+  canteen: [
+    { label: 'Dashboard',       href: '/dashboard/canteen',        icon: HomeIcon },
+    { label: 'Menu Management', href: '/dashboard/canteen-menu',   icon: ClipboardDocumentListIcon },
+    { label: 'Orders',          href: '/dashboard/canteen-orders', icon: ShoppingCartIcon },
+  ],
+  cts: [
+    { label: 'Dashboard',     href: '/dashboard',               icon: HomeIcon },
+    { label: 'Students',      href: '/dashboard/students',      icon: UsersIcon },
+    { label: 'Staff',         href: '/dashboard/staff',         icon: Cog8ToothIcon },
+    { label: 'Complaints',    href: '/dashboard/complaints',    icon: ChatBubbleLeftEllipsisIcon },
+    { label: 'Mess Feedback', href: '/dashboard/mess-feedback', icon: ClipboardDocumentListIcon },
+  ],
+};
+
+const ROLE_ICON_COMPONENT = {
+  student: AcademicCapIcon,
+  warden:  ShieldCheckIcon,
+  worker:  WrenchScrewdriverIcon,
+  canteen: BuildingStorefrontIcon,
+  cts:     Cog8ToothIcon,
+};
 
 function Sidebar() {
-  const { user } = useAuth();
-  const { unreadCount } = useAnnouncements();
+  const { user, setUser }      = useAuth();
+  const { unreadCount }        = useAnnouncements();
+  const { theme, toggleTheme } = useTheme();
+  const location               = useLocation();
 
-  const getMenuItems = () => {
-    switch (user?.role) {
-      case 'student':
-        return [
-          { 
-            name: 'Dashboard', 
-            href: '/dashboard/student', 
-            icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' 
-          },
-          {
-            name: 'Complaints',
-            href: '/dashboard/complaints',
-            icon: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9'
-          },
-          { 
-            name: 'Submit Complaint', 
-            href: '/dashboard/submit-complaint', 
-            icon: 'M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-          },
-          { 
-            name: 'Announcements', 
-            href: '/dashboard/student-announcements', 
-            icon: 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z',
-            badge: unreadCount > 0 ? unreadCount : null
-          },
-          {
-            name: 'Night Canteen',
-            href: '/dashboard/student-canteen',
-            icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
-          }
-        ];
-      case 'warden':
-        return [
-          { name: 'Dashboard', href: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-          { name: 'Students', href: '/dashboard/students', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-          { name: 'Complaints', href: '/dashboard/complaints', icon: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
-          { name: 'Announcements', href: '/dashboard/announcements', icon: 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z' },
-          { name: 'Mess Feedback', href: '/dashboard/mess-feedback', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' }
-        ];
-      case 'worker':
-        return [
-          { name: 'Dashboard', href: '/dashboard/worker', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' }
-        ];
-      case 'canteen':
-        return [
-          { name: 'Dashboard', href: '/dashboard/canteen', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-          { name: 'Menu Management', href: '/dashboard/canteen-menu', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-          { name: 'Orders', href: '/dashboard/canteen-orders', icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' }
-        ];
-      case 'cts':
-        return [
-          { 
-            name: 'Dashboard', 
-            href: '/dashboard', 
-            icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' 
-          },
-          { 
-            name: 'Students', 
-            href: '/dashboard/students', 
-            icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' 
-          },
-          { 
-            name: 'Staff', 
-            href: '/dashboard/staff', 
-            icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' 
-          },
-          { 
-            name: 'Complaints', 
-            href: '/dashboard/complaints', 
-            icon: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' 
-          },
-          { 
-            name: 'Mess Feedback', 
-            href: '/dashboard/mess-feedback', 
-            icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' 
-          }
-        ];
-      default:
-        return [];
-    }
+  const items    = NAV_BY_ROLE[user?.role] || [];
+  const roleName = ROLE_LABELS[user?.role] || 'User';
+  const RoleIcon = ROLE_ICON_COMPONENT[user?.role] || Cog8ToothIcon;
+  const isDark   = theme === 'dark';
+
+  const handleLogout = () => {
+    setUser(null, null);
+    window.location.href = '/';
   };
 
   return (
-    <div className="bg-gray-900 text-white w-64 min-h-screen fixed left-0 shadow-lg transition-all duration-300">
-      <div className="p-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold">Hostel Management</h1>
+    <aside style={{
+      position: 'fixed',
+      top: 0, left: 0,
+      width: 'var(--sidebar-w)',
+      height: '100vh',
+      background: 'var(--color-surface)',
+      borderRight: '1px solid var(--color-border)',
+      display: 'flex',
+      flexDirection: 'column',
+      zIndex: 40,
+      overflow: 'hidden',
+    }}>
+
+      {/* ── Brand ── */}
+      <div style={{ padding: '18px 16px 14px', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{
+          width: 30, height: 30,
+          background: '#2563eb',
+          borderRadius: 7,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+          {/* Custom building icon — no AI gradient */}
+          <svg viewBox="0 0 20 20" fill="white" width="16" height="16">
+            <path d="M2 4a2 2 0 012-2h8a2 2 0 012 2v12h2a1 1 0 010 2H2a1 1 0 010-2h2V4zm2 0v12h8V4H4zm2 3a1 1 0 011-1h2a1 1 0 010 2H7a1 1 0 01-1-1zm0 4a1 1 0 011-1h2a1 1 0 010 2H7a1 1 0 01-1-1zm0 4a1 1 0 011-1h2a1 1 0 010 2H7a1 1 0 01-1-1z" />
+          </svg>
+        </div>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text)', lineHeight: 1.2, letterSpacing: '-0.2px' }}>HostelMS</div>
+          <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>Management Portal</div>
+        </div>
       </div>
-      <nav className="mt-4">
-        {getMenuItems().map((item) => (
-          <Link
-            key={item.name}
-            to={item.href}
-            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors duration-200 relative"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-            </svg>
-            <span className="text-sm font-medium">{item.name}</span>
-            
-            {/* Notification badge */}
-            {item.badge && (
-              <span className="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {item.badge}
-              </span>
-            )}
-          </Link>
-        ))}
+
+      {/* ── User chip ── */}
+      <div style={{ padding: '10px 12px', borderBottom: '1px solid var(--color-border)' }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 9,
+          padding: '8px 10px',
+          background: 'var(--color-bg-subtle)',
+          borderRadius: 8,
+        }}>
+          <div style={{
+            width: 30, height: 30,
+            background: 'var(--color-bg-muted)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <RoleIcon style={{ width: 14, height: 14, color: '#2563eb' }} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {user?.name || user?.email?.split('@')[0] || 'User'}
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{roleName}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Navigation ── */}
+      <nav style={{ flex: 1, padding: '10px 10px', overflowY: 'auto' }}>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--color-text-muted)', padding: '4px 6px 6px' }}>
+          Navigation
+        </div>
+
+        {items.map(({ label, href, icon: Icon, badge }) => {
+          const isActive = location.pathname === href || (href !== '/dashboard' && location.pathname.startsWith(href));
+          const count    = badge ? unreadCount : 0;
+          return (
+            <Link
+              key={href}
+              to={href}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 9,
+                padding: '7px 10px',
+                borderRadius: 7,
+                marginBottom: 1,
+                textDecoration: 'none',
+                fontSize: 13,
+                fontWeight: isActive ? 600 : 450,
+                color: isActive ? '#2563eb' : 'var(--color-text-soft)',
+                background: isActive ? (isDark ? 'rgba(37,99,235,0.12)' : '#eff6ff') : 'transparent',
+                transition: 'background 0.15s, color 0.15s',
+              }}
+              onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'var(--color-bg-muted)'; e.currentTarget.style.color = 'var(--color-text)'; } }}
+              onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--color-text-soft)'; } }}
+            >
+              <Icon style={{ width: 15, height: 15, flexShrink: 0 }} />
+              <span style={{ flex: 1 }}>{label}</span>
+              {count > 0 && (
+                <span style={{
+                  background: '#dc2626', color: '#fff',
+                  fontSize: 10, fontWeight: 700,
+                  padding: '1px 6px', borderRadius: 99,
+                  lineHeight: 1.6,
+                }}>
+                  {count}
+                </span>
+              )}
+              {isActive && <ChevronRightIcon style={{ width: 12, height: 12, opacity: 0.5 }} />}
+            </Link>
+          );
+        })}
       </nav>
-    </div>
+
+      {/* ── Footer controls ── */}
+      <div style={{ padding: '10px 10px', borderTop: '1px solid var(--color-border)' }}>
+        <button
+          onClick={toggleTheme}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 9,
+            padding: '7px 10px', borderRadius: 7, marginBottom: 1,
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: 13, color: 'var(--color-text-soft)',
+            transition: 'background 0.15s, color 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-bg-muted)'; e.currentTarget.style.color = 'var(--color-text)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--color-text-soft)'; }}
+        >
+          {isDark
+            ? <SunIcon style={{ width: 15, height: 15 }} />
+            : <MoonIcon style={{ width: 15, height: 15 }} />
+          }
+          <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
+
+        <button
+          onClick={handleLogout}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 9,
+            padding: '7px 10px', borderRadius: 7,
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: 13, color: '#dc2626',
+            transition: 'background 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'}
+          onMouseLeave={e => e.currentTarget.style.background = 'none'}
+        >
+          <ArrowRightOnRectangleIcon style={{ width: 15, height: 15 }} />
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
   );
 }
 

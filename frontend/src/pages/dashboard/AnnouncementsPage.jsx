@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { auth } from '../../firebase';
 import axios from 'axios';
 import RecentAnnouncements from '../../components/dashboard/RecentAnnouncements';
 import AnnouncementModal from '../../components/dashboard/AnnouncementModal';
@@ -13,7 +12,7 @@ function AnnouncementsPage() {
 
   const fetchAnnouncements = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/announcements', {
         headers: { Authorization: `Bearer ${token}` }
       });

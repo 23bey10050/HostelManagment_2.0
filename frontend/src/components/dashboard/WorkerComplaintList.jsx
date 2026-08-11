@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { auth } from '../../firebase';
 import axios from 'axios';
 
 function WorkerComplaintList() {
@@ -12,7 +11,7 @@ function WorkerComplaintList() {
 
   const fetchComplaints = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/complaints', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -26,7 +25,7 @@ function WorkerComplaintList() {
 
   const handleStatusUpdate = async (complaintId, newStatus) => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.patch(
         `http://localhost:8000/api/complaints/${complaintId}/status`,
         { status: newStatus },

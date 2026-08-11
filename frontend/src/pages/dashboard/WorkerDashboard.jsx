@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { auth } from '../../firebase';
 import axios from 'axios';
 import ComplaintDetailsModal from '../../components/dashboard/ComplaintDetailsModal';
 
@@ -20,7 +19,7 @@ function WorkerDashboard() {
 
   const fetchWorkerData = async () => {
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       
       // Fetch only worker-specific complaints
       const complaintRes = await axios.get('http://localhost:8000/api/complaints/worker', {

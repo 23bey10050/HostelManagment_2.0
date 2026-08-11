@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 
 function CanteenOrders() {
@@ -18,7 +17,7 @@ function CanteenOrders() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get(`http://localhost:8000/api/canteen/orders?status=${statusFilter}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -35,7 +34,7 @@ function CanteenOrders() {
   const handleCompleteOrder = async (orderId) => {
     try {
       setUpdatingOrder(orderId);
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       await axios.put(
         `http://localhost:8000/api/canteen/orders/${orderId}/status`,
         { status: 'completed' },

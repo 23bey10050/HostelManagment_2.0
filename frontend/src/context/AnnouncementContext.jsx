@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { auth } from '../firebase';
 import { useAuth } from './AuthContext';
 
 const AnnouncementContext = createContext();
@@ -41,7 +40,7 @@ export const AnnouncementProvider = ({ children }) => {
     
     setLoading(true);
     try {
-      const token = await auth.currentUser.getIdToken();
+      const token = localStorage.getItem('demo_token');
       const response = await axios.get('http://localhost:8000/api/announcements', {
         headers: { Authorization: `Bearer ${token}` }
       });

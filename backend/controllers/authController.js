@@ -3,131 +3,129 @@ import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const generateToken = (user) => {
-  // Use a default secret if not provided in env for demo purposes
-  const secret = process.env.JWT_SECRET || 'fallback_demo_secret_key_123';
-  return jwt.sign(
-    { 
-      uid: user._id, 
-      email: user.email, 
-      role: user.role,
-      name: user.name,
-      workerCategory: user.workerCategory,
-      upiId: user.upiId,
-      studentId: user.role === 'student' ? user._id : undefined
-    }, 
-    secret, 
-    { expiresIn: '30d' }
-  );
+const JWT_SECRET = process.env.JWT_SECRET || 'hostel_mgmt_super_secure_jwt_secret_2024';
+
+const generateToken = (payload) => {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '30d' });
 };
 
-// For all users (Demo Mode bypassing Firebase)
+// Unified login for all roles (staff + students)
 export const loginStaff = async (req, res) => {
   try {
-    const { email } = req.body; // We ignore password for demo mode to make login seamless
-    
-    // Check if it's a student
-    let user = await Student.findOne({ email });
-    let role = 'student';
+    const { email, password } = req.body;
 
-    // If not a student, check staff
-    if (!user) {
-      user = await User.findOne({ email });
-      if (user) role = user.role;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    // Demo Mode: If user still doesn't exist, we will create a dummy one on the fly
-    // This ensures recruiters can login even on a fresh DB
-    if (!user) {
-      console.log(`Demo user not found for ${email}. Auto-creating dummy user.`);
-      if (email.includes('student')) {
-        user = await Student.create({ 
-          name: 'Demo Student', 
-          email, 
-          roomNumber: '101', 
-          rollNo: 'DEMO123' 
-        });
-        role = 'student';
-      } else {
-        role = email.includes('warden') ? 'warden' : email.includes('canteen') ? 'canteen' : 'worker';
-        user = await User.create({ 
-          name: `Demo ${role}`, 
-          email, 
-          password: await bcrypt.hash('password123', 10), 
-          role,
-          workerCategory: role === 'worker' ? 'plumber' : undefined
-        });
+    let userData = null;
+    let role = null;
+
+    // 1. Check if student (students table has no password, use email match only for demo)
+    const student = await Student.findOne({ email });
+    if (student) {
+      // For student demo login - check against known demo password
+      if (password !== 'demo123') {
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
-    }
+      role = 'student';
+      userData = {
+        uid: student._id,
+        email: student.email,
+        role: 'student',
+        name: student.name,
+        roomNumber: student.roomNumber,
+        hostelBlock: student.hostelBlock,
+        registrationNumber: student.registrationNumber
+      };
+    } else {
+      // 2. Check staff users (warden, worker, canteen)
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials. Please check your email and password.' });
+      }
 
-    // In a real app we'd check password here. 
-    // But since this is a demo to bypass Firebase, we just generate the token.
-    user.role = role; // attach role for token generation
-    const token = generateToken(user);
+      // Verify password with bcrypt
+      if (!user.password) {
+        return res.status(401).json({ message: 'Account not configured. Contact admin.' });
+      }
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
 
-    res.status(200).json({
-      token, // standard JWT
-      user: {
+      role = user.role;
+      userData = {
         uid: user._id,
         email: user.email,
-        role: role,
+        role: user.role,
         name: user.name,
         workerCategory: user.workerCategory,
         upiId: user.upiId
-      }
-    });
+      };
+    }
 
+    const token = generateToken(userData);
+
+    res.status(200).json({ token, user: userData });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Login failed', error: error.message });
+    res.status(500).json({ message: 'Login failed. Please try again.', error: error.message });
   }
 };
 
-// For CTS Admin
 export const loginCTS = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    // Demo Mode bypass
-    if (email !== process.env.CTS_EMAIL && !email.includes('cts')) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    const token = generateToken({ _id: 'cts-admin-id', email, role: 'cts', name: 'CTS Admin' });
+    const user = await User.findOne({ email, role: 'cts' });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid CTS credentials' });
+    }
 
-    res.status(200).json({
-      user: {
-        email,
-        role: 'cts'
-      },
-      token
-    });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid CTS credentials' });
+    }
+
+    const userData = {
+      uid: user._id,
+      email: user.email,
+      role: 'cts',
+      name: user.name
+    };
+    const token = generateToken(userData);
+
+    res.status(200).json({ token, user: userData });
   } catch (error) {
+    console.error('CTS Login error:', error);
     res.status(500).json({ message: 'Login failed' });
   }
 };
 
+// Create staff account
 export const createStaffAccount = async (req, res) => {
   try {
-    const { email, password, role, workerCategory } = req.body;
+    const { email, password, role, workerCategory, name, upiId } = req.body;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
-      email,
-      password: hashedPassword,
-      role,
-      workerCategory
+      email, password: hashedPassword, role, name,
+      ...(role === 'worker' ? { workerCategory } : {}),
+      ...(role === 'canteen' ? { upiId } : {})
     });
 
     res.status(201).json({
       message: 'Staff account created successfully',
-      user: {
-        email: user.email,
-        role: user.role,
-        workerCategory: user.workerCategory
-      }
+      user: { email: user.email, role: user.role, name: user.name }
     });
   } catch (error) {
     console.error('Account creation error:', error);
-    res.status(500).json({ message: 'Failed to create account' });
+    res.status(500).json({ message: 'Failed to create account', error: error.message });
   }
 };
+
