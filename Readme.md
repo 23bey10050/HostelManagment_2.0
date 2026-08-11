@@ -122,41 +122,35 @@ Access the application at `http://localhost:5173`.
 
 ## 📸 Application Screenshots
 
-*(Screenshots to be added here)*
+*(Screenshots to be added here by dropping them into the `screenshots/` directory)*
 
 ### Landing Page & Unified Login
 <p align="center">
-  <img src="./screenshots/landing.png" alt="Landing Page" width="45%" />
-  <img src="./screenshots/login.png" alt="Login Page" width="45%" />
+  <!-- <img src="./screenshots/landing.png" alt="Landing Page" width="45%" /> -->
+  <!-- <img src="./screenshots/login.png" alt="Login Page" width="45%" /> -->
 </p>
 
 ### Student Dashboard
 <p align="center">
-  <img src="./screenshots/student_dashboard.png" alt="Student Dashboard" width="80%" />
+  <!-- <img src="./screenshots/student_dashboard.png" alt="Student Dashboard" width="80%" /> -->
 </p>
 
 ### Warden Overview
 <p align="center">
-  <img src="./screenshots/warden_dashboard.png" alt="Warden Dashboard" width="80%" />
+  <!-- <img src="./screenshots/warden_dashboard.png" alt="Warden Dashboard" width="80%" /> -->
 </p>
 
 ### Canteen Management
 <p align="center">
-  <img src="./screenshots/canteen_dashboard.png" alt="Canteen Dashboard" width="80%" />
+  <!-- <img src="./screenshots/canteen_dashboard.png" alt="Canteen Dashboard" width="80%" /> -->
 </p>
 
 ### CTS Admin (Management)
 <p align="center">
-  <img src="./screenshots/cts_admin.png" alt="CTS Admin" width="80%" />
+  <!-- <img src="./screenshots/cts_admin.png" alt="CTS Admin" width="80%" /> -->
 </p>
 
 ---
-
-## 👨‍💻 Author
-
-<div align="center">
-  <img src="./screenshots/Ritu_Raj_Singh.png" alt="Ritu Raj Singh" width="600" />
-</div>
 
 <br />
 
