@@ -18,7 +18,7 @@ function CanteenOrders() {
     try {
       setLoading(true);
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get(`http://localhost:8000/api/canteen/orders?status=${statusFilter}`, {
+      const response = await axios.get(`/api/canteen/orders?status=${statusFilter}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrders(response.data);
@@ -36,7 +36,7 @@ function CanteenOrders() {
       setUpdatingOrder(orderId);
       const token = localStorage.getItem('demo_token');
       await axios.put(
-        `http://localhost:8000/api/canteen/orders/${orderId}/status`,
+        `/api/canteen/orders/${orderId}/status`,
         { status: 'completed' },
         { headers: { Authorization: `Bearer ${token}` } }
       );

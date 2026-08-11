@@ -17,7 +17,7 @@ function CTSLogin() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/cts/login', credentials);
+      const response = await axios.post('/api/auth/cts/login', credentials);
       const { user: userData } = response.data;
       
       setUser({

@@ -22,7 +22,7 @@ function EditStudentModal({ isOpen, onClose, student, onEditSuccess }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.put(`http://localhost:8000/api/students/${student._id}`, formData, {
+      await axios.put(`/api/students/${student._id}`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       onEditSuccess();

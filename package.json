@@ -1,0 +1,13 @@
+{
+  "name": "hostel-management-system",
+  "version": "1.0.0",
+  "description": "Vercel Monorepo Deployment Configuration",
+  "scripts": {
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "install:backend": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

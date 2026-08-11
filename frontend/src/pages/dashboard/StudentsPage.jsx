@@ -29,7 +29,7 @@ function StudentsPage() {
       
       // Fetch paginated students for table view
       const response = await axios.get(
-        `http://localhost:8000/api/students?page=${page}&search=${search}`,
+        `/api/students?page=${page}&search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -43,7 +43,7 @@ function StudentsPage() {
       // If we're in allocation view or switching to it, fetch all students
       if (viewMode === 'allocation' || !allStudents.length) {
         const allResponse = await axios.get(
-          `http://localhost:8000/api/students/all`,
+          `/api/students/all`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -71,7 +71,7 @@ function StudentsPage() {
         try {
           const token = localStorage.getItem('demo_token');
           const response = await axios.get(
-            `http://localhost:8000/api/students/all`,
+            `/api/students/all`,
             {
               headers: {
                 Authorization: `Bearer ${token}`
@@ -103,7 +103,7 @@ function StudentsPage() {
 
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.delete(`http://localhost:8000/api/students/${studentId}`, {
+      await axios.delete(`/api/students/${studentId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -118,7 +118,7 @@ function StudentsPage() {
     try {
       const token = localStorage.getItem('demo_token');
       const response = await axios.patch(
-        `http://localhost:8000/api/students/${studentId}/access`,
+        `/api/students/${studentId}/access`,
         { isDisabled: disable },
         {
           headers: { 
@@ -230,7 +230,7 @@ function StudentsPage() {
               try {
                 const token = localStorage.getItem('demo_token');
                 const response = await axios.get(
-                  `http://localhost:8000/api/students/all`,
+                  `/api/students/all`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`

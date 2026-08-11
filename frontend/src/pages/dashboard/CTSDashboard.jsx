@@ -26,7 +26,7 @@ function CTSDashboard() {
   const fetchDashboardStats = async () => {
     try {
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get('http://localhost:8000/api/stats/dashboard', {
+      const response = await axios.get('/api/stats/dashboard', {
         headers: {
           Authorization: `Bearer ${token}`
         }

@@ -41,7 +41,7 @@ export const AnnouncementProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get('http://localhost:8000/api/announcements', {
+      const response = await axios.get('/api/announcements', {
         headers: { Authorization: `Bearer ${token}` }
       });
       

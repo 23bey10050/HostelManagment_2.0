@@ -40,7 +40,7 @@ function AddStaffModal({ isOpen, onClose, onSuccess }) {
         upiId: formData.role === 'canteen' ? formData.upiId : undefined
       };
 
-      await axios.post('http://localhost:8000/api/staff', submitData, {
+      await axios.post('/api/staff', submitData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'

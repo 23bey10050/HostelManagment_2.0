@@ -29,7 +29,7 @@ function MessFeedbackForm() {
       try {
         const token = localStorage.getItem('demo_token');
         const response = await axios.get(
-          'http://localhost:8000/api/mess-feedback/my-submissions',
+          '/api/mess-feedback/my-submissions',
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -63,7 +63,7 @@ function MessFeedbackForm() {
         
         // Fetch feedback status
         const statusResponse = await axios.get(
-          'http://localhost:8000/api/mess-feedback/status',
+          '/api/mess-feedback/status',
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -73,7 +73,7 @@ function MessFeedbackForm() {
         // Fetch student data to get mess assignment if needed
         if (!user?.mess) {
           const studentResponse = await axios.get(
-            'http://localhost:8000/api/students/me',
+            '/api/students/me',
             {
               headers: { Authorization: `Bearer ${token}` }
             }
@@ -129,7 +129,7 @@ function MessFeedbackForm() {
     try {
       const token = localStorage.getItem('demo_token');
       await axios.post(
-        'http://localhost:8000/api/mess-feedback/submit',
+        '/api/mess-feedback/submit',
         formData,
         {
           headers: { Authorization: `Bearer ${token}` }

@@ -56,7 +56,7 @@ function AddItemModal({ isOpen, onClose, onAdd }) {
       }
       
       await axios.post(
-        'http://localhost:8000/api/canteen/items',
+        '/api/canteen/items',
         formDataToSend,
         {
           headers: {

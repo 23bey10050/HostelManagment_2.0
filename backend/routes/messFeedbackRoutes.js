@@ -23,6 +23,6 @@ router.get('/my-submissions', checkRole(['student']), getMySubmissions);
 router.put('/toggle', checkRole(['warden', 'cts']), toggleFeedbackSystem);
 router.get('/analytics', checkRole(['warden', 'cts']), getFeedbackAnalytics);
 router.get('/', checkRole(['warden', 'cts']), getAllFeedback);
-router.get('/ai-analysis', checkRole(['warden', 'cts']), getAIFeedbackAnalysis);
+router.get('/automated-analysis', checkRole(['warden', 'cts']), getAIFeedbackAnalysis);
 
 export default router;

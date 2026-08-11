@@ -18,7 +18,7 @@ function AnnouncementModal({ isOpen, onClose, onSuccess }) {
     try {
       const token = localStorage.getItem('demo_token');
       await axios.post(
-        'http://localhost:8000/api/announcements',
+        '/api/announcements',
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

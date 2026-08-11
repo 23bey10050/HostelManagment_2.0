@@ -6,7 +6,7 @@ function RecentAnnouncements({ announcements, onDelete }) {
 
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.delete(`http://localhost:8000/api/announcements/${id}`, {
+      await axios.delete(`/api/announcements/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       onDelete();

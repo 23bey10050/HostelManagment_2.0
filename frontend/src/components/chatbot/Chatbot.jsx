@@ -32,7 +32,7 @@ function Chatbot() {
     try {
       const token = localStorage.getItem('demo_token');
       const response = await axios.post(
-        'http://localhost:8000/api/chatbot/query',
+        '/api/chatbot/query',
         { query: input },
         { headers: { Authorization: `Bearer ${token}` } }
       );

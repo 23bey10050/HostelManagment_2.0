@@ -34,7 +34,7 @@ function EditItemModal({ isOpen, onClose, onEdit, item }) {
 
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.put(`http://localhost:8000/api/canteen/items/${item._id}`, formData, {
+      await axios.put(`/api/canteen/items/${item._id}`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       onEdit();

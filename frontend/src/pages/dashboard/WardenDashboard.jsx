@@ -27,10 +27,10 @@ function WardenDashboard() {
     try {
       const token = localStorage.getItem('demo_token');
       const [statsRes, announcementsRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/stats/dashboard', {
+        axios.get('/api/stats/dashboard', {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('http://localhost:8000/api/announcements', {
+        axios.get('/api/announcements', {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);

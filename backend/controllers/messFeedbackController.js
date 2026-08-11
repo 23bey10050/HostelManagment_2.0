@@ -208,7 +208,7 @@ export const getAllFeedback = async (req, res) => {
   }
 };
 
-// Get AI analysis of mess feedback data
+// Get automated analysis of mess feedback data
 export const getAIFeedbackAnalysis = async (req, res) => {
   try {
     // Get all feedback data
@@ -276,7 +276,7 @@ export const getAIFeedbackAnalysis = async (req, res) => {
       }
     }
     
-    // Add specific questions for the AI to address
+    // Add specific questions for the analysis to address
     promptText += `\nBased on this data, please provide:\n`;
     promptText += `1. A comparison of the different messes (which is performing best/worst and why)\n`;
     promptText += `2. The main strengths and issues for each mess\n`;
@@ -313,9 +313,9 @@ export const getAIFeedbackAnalysis = async (req, res) => {
 
     res.status(200).json({ analysis: analysisText });
   } catch (error) {
-    console.error('Error generating AI analysis:', error);
+    console.error('Error generating automated analysis:', error);
     res.status(500).json({ 
-      message: 'Failed to generate AI analysis',
+      message: 'Failed to generate automated analysis',
       error: error.response?.data || error.message
     });
   }

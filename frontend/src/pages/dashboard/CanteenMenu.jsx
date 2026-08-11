@@ -21,7 +21,7 @@ function CanteenMenu() {
       setLoading(true);
       const token = localStorage.getItem('demo_token');
       
-      let url = 'http://localhost:8000/api/canteen/items';
+      let url = '/api/canteen/items';
       const params = new URLSearchParams();
       
       if (categoryFilter) {
@@ -62,7 +62,7 @@ function CanteenMenu() {
     
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.delete(`http://localhost:8000/api/canteen/items/${itemId}`, {
+      await axios.delete(`/api/canteen/items/${itemId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -77,7 +77,7 @@ function CanteenMenu() {
     try {
       const token = localStorage.getItem('demo_token');
       const response = await axios.patch(
-        `http://localhost:8000/api/canteen/items/${itemId}/toggle`,
+        `/api/canteen/items/${itemId}/toggle`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }

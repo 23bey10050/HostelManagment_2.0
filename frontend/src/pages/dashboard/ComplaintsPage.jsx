@@ -24,7 +24,7 @@ function ComplaintsPage() {
       if (filters.category) params.append('category', filters.category);
       if (filters.dateRange !== 'all') params.append('dateRange', filters.dateRange);
 
-      const response = await axios.get(`http://localhost:8000/api/complaints?${params}`, {
+      const response = await axios.get(`/api/complaints?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setComplaints(response.data);
@@ -49,7 +49,7 @@ function ComplaintsPage() {
     try {
       const token = localStorage.getItem('demo_token');
       await axios.patch(
-        `http://localhost:8000/api/complaints/${complaintId}/status`,
+        `/api/complaints/${complaintId}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

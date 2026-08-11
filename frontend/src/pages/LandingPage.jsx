@@ -64,17 +64,6 @@ const PORTALS = [
     darkBg: 'rgba(5,150,105,0.12)',
     features: ['Menu management', 'Live order queue', 'UPI payments'],
   },
-  {
-    role: 'cts',
-    title: 'CTS Admin',
-    desc: 'Manage all hostel data, staff accounts, and view global statistics.',
-    icon: BriefcaseIcon,
-    href: '/login/cts',
-    accent: '#db2777',
-    lightBg: '#fdf2f8',
-    darkBg: 'rgba(219,39,119,0.12)',
-    features: ['System-wide analytics', 'User management', 'Global announcements'],
-  },
 ];
 
 function LandingPage() {
@@ -123,15 +112,15 @@ function LandingPage() {
           <Link
             to="/login/cts"
             style={{
-              padding: '5px 12px',
-              background: 'var(--color-bg-subtle)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 7, fontSize: 12,
-              color: 'var(--color-text-soft)', textDecoration: 'none',
-              fontWeight: 500,
+              padding: '6px 14px',
+              background: '#db2777',
+              border: '1px solid #be185d',
+              borderRadius: 7, fontSize: 13,
+              color: 'white', textDecoration: 'none',
+              fontWeight: 600,
             }}
           >
-            Admin
+            CTS Admin Portal
           </Link>
         </div>
       </header>

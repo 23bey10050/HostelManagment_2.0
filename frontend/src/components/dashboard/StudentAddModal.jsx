@@ -44,7 +44,7 @@ function StudentAddModal({ isOpen, onClose, onAddSuccess, prefillData = null, fi
     setLoading(true);
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.post('http://localhost:8000/api/students', formData, {
+      await axios.post('/api/students', formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

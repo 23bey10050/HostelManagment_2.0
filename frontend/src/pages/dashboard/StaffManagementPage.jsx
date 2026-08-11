@@ -15,7 +15,7 @@ function StaffManagementPage() {
     try {
       const token = localStorage.getItem('demo_token');
       const response = await axios.get(
-        `http://localhost:8000/api/staff?search=${searchTerm}`,
+        `/api/staff?search=${searchTerm}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -44,7 +44,7 @@ function StaffManagementPage() {
 
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.delete(`http://localhost:8000/api/staff/${staffId}`, {
+      await axios.delete(`/api/staff/${staffId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchStaff();

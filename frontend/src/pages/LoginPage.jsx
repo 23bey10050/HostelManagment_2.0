@@ -54,7 +54,7 @@ function LoginPage() {
     if (e) e.preventDefault();
     setLoading(true); setError('');
     try {
-      const res  = await axios.post('http://localhost:8000/api/auth/staff/login', { email, password: pass });
+      const res  = await axios.post('/api/auth/staff/login', { email, password: pass });
       const { token, user: u } = res.data;
       setUser(u, token);
       const routes = { worker: '/dashboard/worker', warden: '/dashboard/warden', canteen: '/dashboard/canteen', student: '/dashboard/student', cts: '/dashboard' };

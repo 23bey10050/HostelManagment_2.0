@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MessFeedbackAnalytics from '../../components/dashboard/MessFeedbackAnalytics';
 import MessFeedbackResponses from '../../components/dashboard/MessFeedbackResponses';
-import MessFeedbackAIAnalysis from '../../components/dashboard/MessFeedbackAIAnalysis';
+import MessFeedbackAnalysis from '../../components/dashboard/MessFeedbackAnalysis';
 
 function MessFeedbackPage() {
   const [activeTab, setActiveTab] = useState('analytics');
@@ -18,7 +18,7 @@ function MessFeedbackPage() {
     try {
       const token = localStorage.getItem('demo_token');
       const response = await axios.get(
-        'http://localhost:8000/api/mess-feedback/status',
+        '/api/mess-feedback/status',
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -34,7 +34,7 @@ function MessFeedbackPage() {
     try {
       const token = localStorage.getItem('demo_token');
       const response = await axios.get(
-        'http://localhost:8000/api/mess-feedback/analytics',
+        '/api/mess-feedback/analytics',
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -52,7 +52,7 @@ function MessFeedbackPage() {
       const params = new URLSearchParams({ page, ...filters });
       
       const response = await axios.get(
-        `http://localhost:8000/api/mess-feedback?${params}`,
+        `/api/mess-feedback?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -71,7 +71,7 @@ function MessFeedbackPage() {
     try {
       const token = localStorage.getItem('demo_token');
       await axios.put(
-        'http://localhost:8000/api/mess-feedback/toggle',
+        '/api/mess-feedback/toggle',
         { enabled: !feedbackEnabled },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -182,7 +182,7 @@ function MessFeedbackPage() {
               onFilterChange={(filters) => fetchResponses(1, filters)}
             />
           ) : (
-            <MessFeedbackAIAnalysis />
+            <MessFeedbackAnalysis />
           )}
         </div>
       </div>

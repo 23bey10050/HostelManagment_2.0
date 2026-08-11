@@ -29,7 +29,7 @@ function StudentCanteen() {
       setLoading(true);
       const token = localStorage.getItem('demo_token');
       const response = await axios.get(
-        'http://localhost:8000/api/canteen/items',
+        '/api/canteen/items',
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -46,7 +46,7 @@ function StudentCanteen() {
   const fetchCanteenStatus = async () => {
     try {
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get('http://localhost:8000/api/canteen/status', {
+      const response = await axios.get('/api/canteen/status', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCanteenStatus(response.data);
@@ -60,7 +60,7 @@ function StudentCanteen() {
       setLoading(true);
       const token = localStorage.getItem('demo_token');
       const response = await axios.get(
-        'http://localhost:8000/api/canteen/my-orders',
+        '/api/canteen/my-orders',
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -114,7 +114,7 @@ function StudentCanteen() {
       
       // Create temporary order
       const response = await axios.post(
-        'http://localhost:8000/api/canteen/orders',
+        '/api/canteen/orders',
         { items },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -188,7 +188,7 @@ function StudentCanteen() {
       
       // Verify payment with backend
       const response = await axios.post(
-        `http://localhost:8000/api/canteen/orders/verify-payment`,
+        `/api/canteen/orders/verify-payment`,
         {
           razorpay_payment_id: paymentId,
           razorpay_order_id: razorpayOrderId, 

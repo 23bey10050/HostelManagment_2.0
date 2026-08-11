@@ -26,10 +26,10 @@ function StudentDashboard() {
       try {
         const token = localStorage.getItem('demo_token');
         const [studentRes, complaintsRes] = await Promise.all([
-          axios.get('http://localhost:8000/api/students/me', {
+          axios.get('/api/students/me', {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('http://localhost:8000/api/complaints', {
+          axios.get('/api/complaints', {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
@@ -57,7 +57,7 @@ function StudentDashboard() {
       try {
         const token = localStorage.getItem('demo_token');
         const response = await axios.get(
-          'http://localhost:8000/api/mess-feedback/status',
+          '/api/mess-feedback/status',
           {
             headers: { Authorization: `Bearer ${token}` }
           }

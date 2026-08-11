@@ -13,7 +13,7 @@ function AnnouncementsPage() {
   const fetchAnnouncements = async () => {
     try {
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get('http://localhost:8000/api/announcements', {
+      const response = await axios.get('/api/announcements', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAnnouncements(response.data);

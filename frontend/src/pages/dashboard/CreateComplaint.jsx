@@ -21,7 +21,7 @@ function CreateComplaint() {
     const fetchStudentData = async () => {
       try {
         const token = localStorage.getItem('demo_token');
-        const response = await axios.get('http://localhost:8000/api/students/me', {
+        const response = await axios.get('/api/students/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -66,7 +66,7 @@ function CreateComplaint() {
       }
 
       const response = await axios.post(
-        'http://localhost:8000/api/complaints',
+        '/api/complaints',
         formDataToSend,
         {
           headers: {

@@ -22,7 +22,7 @@ function WorkerDashboard() {
       const token = localStorage.getItem('demo_token');
       
       // Fetch only worker-specific complaints
-      const complaintRes = await axios.get('http://localhost:8000/api/complaints/worker', {
+      const complaintRes = await axios.get('/api/complaints/worker', {
         headers: { Authorization: `Bearer ${token}` }
       });
 

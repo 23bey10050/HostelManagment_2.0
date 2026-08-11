@@ -37,7 +37,7 @@ function CanteenDashboard() {
   const fetchCanteenData = async () => {
     try {
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get('http://localhost:8000/api/canteen/stats', {
+      const response = await axios.get('/api/canteen/stats', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStats(response.data);
@@ -52,7 +52,7 @@ function CanteenDashboard() {
   const fetchCanteenStatus = async () => {
     try {
       const token = localStorage.getItem('demo_token');
-      const response = await axios.get('http://localhost:8000/api/canteen/status', {
+      const response = await axios.get('/api/canteen/status', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCanteenStatus(response.data);
@@ -70,7 +70,7 @@ function CanteenDashboard() {
       const newStatus = !canteenStatus.isOpen;
       
       const response = await axios.put(
-        'http://localhost:8000/api/canteen/status',
+        '/api/canteen/status',
         { 
           isOpen: newStatus,
           message: statusMessage

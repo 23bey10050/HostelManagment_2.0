@@ -30,7 +30,7 @@ function StudentUploadModal({ isOpen, onClose, onUploadSuccess }) {
 
     try {
       const token = localStorage.getItem('demo_token');
-      await axios.post('http://localhost:8000/api/students/bulk', formData, {
+      await axios.post('/api/students/bulk', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
